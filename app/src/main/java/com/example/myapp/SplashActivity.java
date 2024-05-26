@@ -1,0 +1,28 @@
+package com.example.myapp;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SplashActivity extends AppCompatActivity {
+
+    private static final int SPLASH_TIME_OUT = 3000; // مدة عرض صفحة السبلاش بالمللي ثانية
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.splash_screen);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // الانتقال إلى LoginActivity بعد انتهاء مدة السبلاش
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
+    }
+}
+

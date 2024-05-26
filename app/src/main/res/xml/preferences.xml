@@ -1,0 +1,51 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Profile Settings">
+        <Preference
+            android:key="profile_picture"
+            android:title="Profile Picture"
+            android:summary="Tap to select a profile picture"
+            android:icon="@drawable/pppppo" />
+
+        <EditTextPreference
+            android:key="name"
+            android:title="Name"
+            android:summary="Enter your name" />
+
+        <EditTextPreference
+            android:key="email"
+            android:title="Email"
+            android:summary="Enter your email address" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="General Settings">
+        <SwitchPreferenceCompat
+            android:key="notifications"
+            android:title="Receive Notifications"
+            android:summary="Enable/disable push notifications" />
+
+        <EditTextPreference
+            android:key="username"
+            android:title="Username"
+            android:summary="Enter your username" />
+
+        <ListPreference
+            android:key="language"
+            android:title="Preferred Language"
+            android:summary="Select your preferred language"
+            android:entries="@array/language_entries"
+            android:entryValues="@array/language_values"
+            android:defaultValue="en" />
+
+        <Preference
+            android:key="logout"
+            android:title="Log out"
+            android:summary="Log out from your account"
+            android:icon="@drawable/ghnm" />
+    </PreferenceCategory>
+</PreferenceScreen>
+
+
+
+
+
+

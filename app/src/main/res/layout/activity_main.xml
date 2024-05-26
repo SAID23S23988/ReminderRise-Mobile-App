@@ -1,0 +1,120 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="247dp"
+        android:layout_height="132dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ddddd" />
+
+    <GridLayout
+        android:id="@+id/imageGrid"
+        android:layout_width="364dp"
+        android:layout_height="326dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:columnCount="2"
+        android:rowCount="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView3"
+        tools:layout_editor_absoluteY="193dp">
+
+        <Button
+            android:id="@+id/addEventButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_row="0"
+            android:layout_rowSpan="1"
+            android:layout_rowWeight="1"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/kan"
+            android:contentDescription="Add Event Button"
+            android:onClick="openAddEventPage"
+            android:scaleType="centerCrop"
+            android:text="" />
+
+        <ImageView
+            android:id="@+id/viewEventsButton"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_rowSpan="1"
+            android:layout_rowWeight="1"
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="View Events"
+            android:scaleType="centerCrop"
+            android:src="@drawable/images" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowSpan="1"
+            android:layout_rowWeight="1"
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/zorrc"
+            android:contentDescription="Settings"
+            android:onClick="openSettingsPage"
+            android:scaleType="centerCrop"
+            android:text=""
+            app:layout_constraintTop_toBottomOf="@id/viewEventsButton" />
+
+        <ImageView
+            android:id="@+id/homeButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowSpan="1"
+            android:layout_rowWeight="1"
+            android:layout_columnSpan="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/home"
+            android:contentDescription="Home"
+            android:scaleType="centerCrop" />
+    </GridLayout>
+
+    <Button
+        android:id="@+id/actionButton"
+        android:layout_width="0dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="80dp"
+        android:background="#3593b8"
+        android:onClick="openAddEventPage"
+        android:text="Get Started"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
