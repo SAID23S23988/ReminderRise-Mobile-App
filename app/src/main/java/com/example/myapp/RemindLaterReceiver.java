@@ -19,7 +19,7 @@ public class RemindLaterReceiver extends BroadcastReceiver {
             reminderIntent.putExtra("eventDate", intent.getStringExtra("eventDate"));
 
             context.sendBroadcast(reminderIntent);
-        }, 5 * 60 * 1000); // 5 minutes delay
+        }, 5 * 60 * 1000);
     }
 }
 
