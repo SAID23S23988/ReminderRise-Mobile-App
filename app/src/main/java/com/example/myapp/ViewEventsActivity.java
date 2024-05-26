@@ -63,8 +63,6 @@ public class ViewEventsActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
         cursor.close();
-
-        // تمرير السياق عند إنشاء EventsAdapter
         eventsAdapter = new EventsAdapter(events, this);
         eventsRecyclerView.setAdapter(eventsAdapter);
     }
