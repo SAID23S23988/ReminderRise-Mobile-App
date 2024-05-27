@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -52,12 +53,10 @@ public class AddEventsActivity extends AppCompatActivity {
             if (eventName.trim().isEmpty()) {
                 Toast.makeText(this, "Please enter event name", Toast.LENGTH_SHORT).show();
             } else {
-                long eventId = databaseHelper.addEvent(eventName, eventDate, currentUserId); // Add event to database and get its unique ID
+                long eventId = databaseHelper.addEvent(eventName, eventDate, currentUserId);
                 if (eventId != -1) {
                     Toast.makeText(this, "Event saved: " + eventName + " on " + eventDate, Toast.LENGTH_SHORT).show();
                     eventNameEditText.setText("");
-
-                    // Check and request notification permission
                     if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_REQUEST_CODE);
                     } else {
@@ -117,7 +116,7 @@ public class AddEventsActivity extends AppCompatActivity {
 
     private String formatDate(DatePicker datePicker) {
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth() + 1; // Months are zero-based
+        int month = datePicker.getMonth() + 1;
         int year = datePicker.getYear();
         return day + "/" + month + "/" + year;
     }
@@ -127,7 +126,7 @@ public class AddEventsActivity extends AppCompatActivity {
     }
 
     private void scheduleNotification(String eventName, String eventDate) {
-        new Handler().postDelayed(() -> sendNotification(eventName, eventDate), 5000); // 5000 milliseconds = 5 seconds
+        new Handler().postDelayed(() -> sendNotification(eventName, eventDate), 5000);
     }
 
     private void sendNotification(String eventName, String eventDate) {
@@ -149,7 +148,6 @@ public class AddEventsActivity extends AppCompatActivity {
             NotificationChannel channel = new NotificationChannel(channelId, "Event Reminders", NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
         }
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.llogo)
                 .setContentTitle("Event Reminder")
@@ -164,10 +162,10 @@ public class AddEventsActivity extends AppCompatActivity {
 
         notificationManager.notify(1, builder.build());
 
-        // Show a Toast message in the center of the screen
         Toast toast = Toast.makeText(this, "Event: " + eventName + " on " + eventDate, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+
     }
 }
 

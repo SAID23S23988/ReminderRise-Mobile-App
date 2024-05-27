@@ -43,7 +43,7 @@ public class ViewEventsActivity extends AppCompatActivity {
     }
 
     private void loadEvents() {
-        Cursor cursor = databaseHelper.getAllEvents(null); // Retrieve all events
+        Cursor cursor = databaseHelper.getAllEvents(null);
         List<Event> events = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -63,8 +63,6 @@ public class ViewEventsActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
         cursor.close();
-
-        // تمرير السياق عند إنشاء EventsAdapter
         eventsAdapter = new EventsAdapter(events, this);
         eventsRecyclerView.setAdapter(eventsAdapter);
     }

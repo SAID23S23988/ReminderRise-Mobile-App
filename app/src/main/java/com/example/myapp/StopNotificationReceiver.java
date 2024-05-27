@@ -10,7 +10,7 @@ public class StopNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(1); // Cancel the notification
+        notificationManager.cancel(1);
     }
 }
 

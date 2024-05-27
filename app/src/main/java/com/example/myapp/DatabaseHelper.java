@@ -19,7 +19,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_EMAIL = "email";
     private static final String COLUMN_USER_PASSWORD = "password";
 
-    // Events table
     private static final String TABLE_EVENTS = "events";
     private static final String COLUMN_EVENT_ID = "id";
     public static final String COLUMN_EVENT_NAME = "name";
@@ -133,10 +132,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_EVENTS, COLUMN_EVENT_ID + " = ?", new String[]{String.valueOf(eventId)}) > 0;
     }
-
-
-
-    // Getter for COLUMN_EVENT_ID
     public static String getColumnEventId() {
         return COLUMN_EVENT_ID;
     }
