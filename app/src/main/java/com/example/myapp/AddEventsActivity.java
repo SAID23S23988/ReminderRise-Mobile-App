@@ -1,17 +1,13 @@
 package com.example.myapp;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,8 +17,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class AddEventsActivity extends AppCompatActivity {
 
@@ -83,8 +84,7 @@ public class AddEventsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -116,56 +116,48 @@ public class AddEventsActivity extends AppCompatActivity {
 
     private String formatDate(DatePicker datePicker) {
         int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth() + 1;
+        int month = datePicker.getMonth();
         int year = datePicker.getYear();
-        return day + "/" + month + "/" + year;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, 0, 0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
     }
 
     private int getCurrentUserId() {
         return 1;
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     private void scheduleNotification(String eventName, String eventDate) {
-        new Handler().postDelayed(() -> sendNotification(eventName, eventDate), 5000);
-    }
-
-    private void sendNotification(String eventName, String eventDate) {
-        Intent stopIntent = new Intent(this, StopNotificationReceiver.class);
-        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent remindLaterIntent = new Intent(this, RemindLaterReceiver.class);
-        remindLaterIntent.putExtra("eventName", eventName);
-        remindLaterIntent.putExtra("eventDate", eventDate);
-        PendingIntent remindLaterPendingIntent = PendingIntent.getBroadcast(this, 0, remindLaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String channelId = "event_reminder_channel";
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "Event Reminders", NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(channel);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Date eventDateObj;
+        try {
+            eventDateObj = dateFormat.parse(eventDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.llogo)
-                .setContentTitle("Event Reminder")
-                .setContentText("Event: " + eventName + " on " + eventDate)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .addAction(new NotificationCompat.Action.Builder(0, "Stop", stopPendingIntent).build())
-                .addAction(new NotificationCompat.Action.Builder(0, "Remind Later", remindLaterPendingIntent).build())
-                .setColor(ContextCompat.getColor(this, R.color.blue));
 
-        notificationManager.notify(1, builder.build());
+        long eventTimeInMillis = eventDateObj.getTime();
+        long currentTimeInMillis = System.currentTimeMillis();
+        long delay = eventTimeInMillis - currentTimeInMillis;
 
-        Toast toast = Toast.makeText(this, "Event: " + eventName + " on " + eventDate, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        if (delay > 0) {
+            Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+            notificationIntent.putExtra("eventName", eventName);
+            notificationIntent.putExtra("eventDate", eventDate);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, eventTimeInMillis, pendingIntent);
+            }
+
+            Toast.makeText(this, "Notification scheduled for event: " + eventName + " on " + eventDate, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Event date is in the past", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 
