@@ -125,7 +125,7 @@ public class AddEventsActivity extends AppCompatActivity {
     }
 
     private int getCurrentUserId() {
-        return 1; // افتراضياً يمكنك تعديلها لتتوافق مع متطلباتك
+        return 1; 
     }
 
     @SuppressLint("ScheduleExactAlarm")
