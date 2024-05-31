@@ -3,6 +3,7 @@ package com.example.myapp;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,12 +18,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class AddEventsActivity extends AppCompatActivity {
@@ -61,7 +61,7 @@ public class AddEventsActivity extends AppCompatActivity {
                     if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_REQUEST_CODE);
                     } else {
-                        scheduleNotification(eventName, eventDate);
+                        scheduleNotification(eventName, eventDate, eventDatePicker);
                     }
                 } else {
                     Toast.makeText(this, "Failed to save event", Toast.LENGTH_SHORT).show();
@@ -119,7 +119,7 @@ public class AddEventsActivity extends AppCompatActivity {
         int month = datePicker.getMonth();
         int year = datePicker.getYear();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day, 0, 0);
+        calendar.set(year, month, day, 0, 0); // Reset time to 00:00
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         return dateFormat.format(calendar.getTime());
     }
@@ -129,21 +129,15 @@ public class AddEventsActivity extends AppCompatActivity {
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    private void scheduleNotification(String eventName, String eventDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        Date eventDateObj;
-        try {
-            eventDateObj = dateFormat.parse(eventDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
+    private void scheduleNotification(String eventName, String eventDate, DatePicker eventDatePicker) {
+        Calendar eventCalendar = Calendar.getInstance();
+        eventCalendar.set(eventDatePicker.getYear(), eventDatePicker.getMonth(), eventDatePicker.getDayOfMonth(), 9, 0, 0);
 
-        long eventTimeInMillis = eventDateObj.getTime();
+        long eventTimeInMillis = eventCalendar.getTimeInMillis();
         long currentTimeInMillis = System.currentTimeMillis();
-        long delay = eventTimeInMillis - currentTimeInMillis;
 
-        if (delay > 0) {
+        if (eventTimeInMillis > currentTimeInMillis || (eventCalendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)
+                && eventCalendar.get(Calendar.DAY_OF_YEAR) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR))) {
             Intent notificationIntent = new Intent(this, NotificationReceiver.class);
             notificationIntent.putExtra("eventName", eventName);
             notificationIntent.putExtra("eventDate", eventDate);
