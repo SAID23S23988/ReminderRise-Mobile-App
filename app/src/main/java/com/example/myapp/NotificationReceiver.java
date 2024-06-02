@@ -41,7 +41,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         PendingIntent remindLaterPendingIntent = PendingIntent.getBroadcast(context, 1, remindLaterIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.llogo)  // رمز صغير للإشعار
+                .setSmallIcon(R.drawable.llogo) 
                 .setContentTitle("Event Reminder")
                 .setContentText("Event: " + eventName + " on " + eventDate)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
